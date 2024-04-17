@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Image } from 'react-native';
+
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
 const MainView = ({ navigation }) => {
   const [sensorData, setSensorData] = useState(null);
-  const { idUser } = useContext(UserContext); // Obtén el ID de usuario del contexto
-  console.log('Usuario:', idUser); // Aquí data será el valor numérico del sensor
+  const { userId } = useContext(UserContext); // Obtén el ID de usuario del contexto
+
   const handleLogout = () => {
     navigation.navigate('Login');
   };
@@ -24,20 +25,80 @@ const MainView = ({ navigation }) => {
       const data = await response.text(); // Leer el cuerpo de la respuesta directamente
       setSensorData(data);
       console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
+      handleUVActions
+
+      // Realiza las acciones basadas en los datos de radiación UV
+      handleUVActions(data);
     } catch (error) {
       console.error('Error fetching sensor data:', error);
+    }
+    if (data) {
+      const parsedData = JSON.parse(data);
+      const radiacionesUV = parsedData.radiaciones_uv.map(Number); // Convertir los valores a números
+      const minValue = Math.min(...radiacionesUV);
+      const DivMaxUV = minValue / 4;
+  
+      if (sensorData >= minValue) {
+        // Peligro
+        return (
+          <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+            <Text style={styles.texto}>No puedes salir hoy</Text>
+            <Image source={require('./assets/no_salir.png')} style={styles.imagen} />
+          </View>
+        );
+      } else if (sensorData <= (minValue - DivMaxUV)) {
+        // Mayor
+        return (
+          <>
+            <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+              <Text style={styles.texto}>Aplica bloqueador solar</Text>
+              <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+            </View>
+            <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+              <Text style={styles.texto}>Demasiado sol</Text>
+              <Image source={require('./assets/sudor.png')} style={styles.imagen} />
+            </View>
+            <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+              <Text style={styles.texto}>Utiliza sombrilla</Text>
+              <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
+            </View>
+          </>
+        );
+      } else if (sensorData <= (minValue - (2 * DivMaxUV))) {
+        // Medio
+        return (
+          <>
+            <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+              <Text style={styles.texto}>Aplica bloqueador solar</Text>
+              <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+            </View>
+            <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+              <Text style={styles.texto}>Usa gorra para el sol</Text>
+              <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+            </View>
+          </>
+        );
+      } else {
+        // Nada
+        return (
+          <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+            <Text style={styles.texto}>Despejado, puedes salir hoy</Text>
+            <Image source={require('./assets/salir.png')} style={styles.imagen} />
+          </View>
+        );
+      }
     }
   };
   
   const fetchMaxUV = async () => {
     try {
-      const response = await fetch(`http://10.10.52.160:8080/maxUv/${idUser}`);
+      const response = await fetch(`http://10.10.52.160:8080/maxUv/${userId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      // Aquí puedes hacer algo con la radiación UV máxima obtenida, por ejemplo, imprimir en la consola
-      console.log('Radiación UV máxima:', data.maxUV);
+      // Aquí puedes hacer algo con los datos de radiación UV obtenidos, por ejemplo, imprimir en la consola
+      console.log('Datos de radiación UV:', data);
     } catch (error) {
       console.error('Error fetching max UV:', error);
     }
@@ -60,7 +121,10 @@ const MainView = ({ navigation }) => {
 
         <View style={styles.recommendationsContainer}>
           <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
-          {/* Renderizar sensorData aquí */}
+
+          {/*aqui iran las imagenes dependiendo handleUVActions */}
+          {handleUVActions(data)}
+
           <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
             <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
           </TouchableOpacity>
