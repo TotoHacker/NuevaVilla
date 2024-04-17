@@ -1,9 +1,12 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native';
-import Micomponent from './recomendaciones';
+import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
 const MainView = ({ navigation }) => {
+  const [sensorData, setSensorData] = useState(null);
+  const { idUser } = useContext(UserContext); // Obtén el ID de usuario del contexto
+
   const handleLogout = () => {
     navigation.navigate('Login');
   };
@@ -12,53 +15,80 @@ const MainView = ({ navigation }) => {
     navigation.navigate('Formulario');
   };
 
+  const handleCheckRadiation = async () => {
+    try {
+      const response = await fetch('http://192.168.0.14/sensor');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.text(); // Leer el cuerpo de la respuesta directamente
+      setSensorData(data);
+      console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
+    } catch (error) {
+      console.error('Error fetching sensor data:', error);
+    }
+  };
+  
 
+  const fetchMaxUV = async () => {
+    try {
+      const response = await fetch(`http://192.168.0.14/maxUv/${idUser}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      // Aquí puedes hacer algo con la radiación UV máxima obtenida, por ejemplo, imprimir en la consola
+      console.log('Radiación UV máxima:', data.maxUV);
+    } catch (error) {
+      console.error('Error fetching max UV:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Realiza la solicitud de radiación UV máxima al cargar el componente
+    fetchMaxUV();
+  }, []);
 
   return (
-    <ScrollView >
-    <View style={styles.container}>
-  <View style={styles.header}>
-    <Text style={styles.headerText}>Flower Shield</Text>
-    <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-      <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-    </TouchableOpacity>
-  </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Flower Shield</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+          </TouchableOpacity>
+        </View>
 
-  <View style={styles.recommendationsContainer}>
-    <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
-    <View style={styles.recommendations}>
-      <Micomponent />
-    </View>
-    <TouchableOpacity style={styles.checkRadiationButton}>
-      <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
-    </TouchableOpacity>
-  </View>
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
+          {/* Renderizar sensorData aquí */}
+          <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
+            <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
+          </TouchableOpacity>
+        </View>
 
-  <View style={styles.body}>
-    <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
-      <Text style={styles.answerButtonText}>Contestar Formulario</Text>
-    </TouchableOpacity>
-  </View>
-</View>
-
-      </ScrollView>
+        <View style={styles.body}>
+          <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
+            <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFDD0', // Amarillo claro
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    position:'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#FFA07A', // Salmón claro
-    backgroundColor: '#e98c00', // Salmón claro
+    backgroundColor: '#e98c00',
   },
   headerText: {
     fontSize: 24,
@@ -76,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height:100000,
+    height: 100000,
   },
   answerButton: {
     backgroundColor: '#FF6347',
@@ -85,91 +115,38 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 3,
     marginBottom: 20,
-    justifyContent: 'center', // Añadimos esta línea para centrar el contenido verticalmente
-    alignItems: 'center', // Añadimos esta línea para centrar el contenido horizontalmente
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  
   answerButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
   },
   recommendationsContainer: {
-    maxHeight:600,
+    maxHeight: 600,
     alignItems: 'center',
     marginTop: 20,
   },
   recommendationsHeader: {
-    padding:50,
-
+    padding: 50,
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-  scrollViewContent: {
-    height:900,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  imageContainer: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    marginHorizontal: 10,
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  imagen: {
-    width: 120,
-    height: 120,
-    resizeMode: 'cover',
-    alignSelf: 'center',
-    marginTop: 6,
-  },
-  texto: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 10,
   },
   checkRadiationButton: {
     backgroundColor: '#6495ED',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
-    justifyContent: 'center', // Añadimos esta línea para centrar el contenido verticalmente
-    alignItems: 'center', // Añadimos esta línea para centrar el contenido horizontalmente
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  
   checkRadiationButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
   },
-
-  imageContainer: {
-    alignItems: 'center',
-    backgroundColor: 'white', // Color de fondo del contenedor
-    borderRadius: 10, // Ajusta según tu diseño
-    marginHorizontal: 10, // Ajusta según tu diseño
-    justifyContent: 'space-between', // Ajusta según tu diseño
-    paddingHorizontal: 10, // Espaciado horizontal dentro del contenedor
-    paddingVertical: 5, // Espaciado vertical dentro del contenedor
-  },
-  imagen:{
-    width: 120, // 5 cm en puntos
-  height: 120, // 5 cm en puntos
-  resizeMode: 'cover',
-  alignSelf: 'center',
-  marginTop: 6,
-  },
-  texto: {
-    fontSize: 16, // Ajusta según tu diseño
-    fontWeight: 'bold', // Ajusta según tu diseño
-    marginRight: 10, // Espaciado a la derecha del texto
-  },
 });
 
 export default MainView;
-

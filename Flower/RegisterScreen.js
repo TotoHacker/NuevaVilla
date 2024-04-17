@@ -23,7 +23,7 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('http://192.168.0.9:8080/signup', {
+      const response = await axios.post('http://192.168.0.8:8080/signup', {
         nombre: name,
         correo_electronico: email,
         contrasena: password,

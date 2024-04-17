@@ -19,7 +19,7 @@ const FormView = ({ navigation }) => {
   // Función para obtener las enfermedades existentes desde el servidor
   const fetchEnfermedades = async () => {
     try {
-      const response = await axios.get('http://192.168.0.9:8080/enfermedades');
+      const response = await axios.get('http://192.168.0.8:8080/enfermedades');
       setEnfermedades(response.data);
       setLoading(false);
     } catch (error) {
