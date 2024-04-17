@@ -15,39 +15,9 @@ const MainView = ({ navigation }) => {
     navigation.navigate('Formulario');
   };
 
-  const handleCheckRadiation = async () => {
-    try {
-      const response = await fetch('http://192.168.0.14/sensor');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.text(); // Leer el cuerpo de la respuesta directamente
-      setSensorData(data);
-      console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
-    } catch (error) {
-      console.error('Error fetching sensor data:', error);
-    }
+  const handlepronostico = () => {
+    navigation.navigate('pronostico');
   };
-  
-
-  const fetchMaxUV = async () => {
-    try {
-      const response = await fetch(`http://192.168.0.14/maxUv/${idUser}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      // Aquí puedes hacer algo con la radiación UV máxima obtenida, por ejemplo, imprimir en la consola
-      console.log('Radiación UV máxima:', data.maxUV);
-    } catch (error) {
-      console.error('Error fetching max UV:', error);
-    }
-  };
-
-  useEffect(() => {
-    // Realiza la solicitud de radiación UV máxima al cargar el componente
-    fetchMaxUV();
-  }, []);
 
   return (
     <ScrollView>
@@ -67,13 +37,17 @@ const MainView = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.body}>
-          <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
-            <Text style={styles.answerButtonText}>Contestar Formulario</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+  <View style={styles.body}>
+    <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
+      <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
+      <Text style={styles.answerButtonText}>Clima</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
+      </ScrollView>
   );
 };
 

@@ -18,12 +18,10 @@ const RegisterScreen = ({ navigation }) => {
       Alert.alert('Error', 'Las contraseñas no coinciden.');
       return;
     }
-    if(email !='/^[^\s@]+@[^\s@]+\.[^\s@]+$/'){
-      Alert.alert('El campo email debe contener un dato valido','ejemplo@ejemplo.com')
-    }
+    
 
     try {
-      const response = await axios.post('http://192.168.0.8:8080/signup', {
+      const response = await axios.post('http://10.10.52.124:8080/signup', {
         nombre: name,
         correo_electronico: email,
         contrasena: password,
