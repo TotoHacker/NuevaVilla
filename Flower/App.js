@@ -18,6 +18,7 @@ const App = () => {
         <Stack.Screen name="Main" component={MainView} />
         <Stack.Screen name="Formulario" component={FormView} />
 
+
       </Stack.Navigator>
     </NavigationContainer>
   );

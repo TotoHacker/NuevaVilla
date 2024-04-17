@@ -29,11 +29,13 @@ const LoginScreen = ({ navigation }) => {
 
   const handleRegister = () => {
     // Redirigir a la pantalla de registro
-    navigation.navigate('Register');
+    navigation.navigate('Main');
   };
 
   return (
+    
     <View style={styles.container}>
+
       <TextInput
         placeholder="Usuario"
         value={username}

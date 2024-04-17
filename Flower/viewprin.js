@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
 
+const Micomponent = () =>(
+  <View style={styles.imageContainer}>
+  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+  <Text style={styles.texto}>Aplicate bloqueador solar</Text>
+      <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+    </View>
+    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+    <Text style={styles.texto}>Usa gorra para el sol</Text>
+  <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+  </View>
+  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+  <Text style={styles.texto}>Utiliza sombrilla </Text>
+  <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
+  </View>
+  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
+  <Text style={styles.texto}>Deamasiado sol</Text>
+  <Image source={require('./assets/sudor.png')} style={styles.imagen} />
+</View>
+</View>
+);
 const MainView = ({ navigation }) => {
   const [showFormButton, setShowFormButton] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
@@ -46,13 +67,15 @@ const MainView = ({ navigation }) => {
           </TouchableOpacity>
         ) : (
           <View style={styles.recommendationsContainer}>
-            <Text style={styles.recommendationsHeader}>Recomendaciones</Text>
+            <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
             <View style={styles.recommendations}>
+            <Micomponent/>
             </View>
             <TouchableOpacity style={styles.checkRadiationButton}>
-              <Text style={styles.checkRadiationButtonText}>Checar Radiación del Día de Hoy</Text>
+              <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
             </TouchableOpacity>
           </View>
+  
         )}
       </View>
     </View>
@@ -62,7 +85,7 @@ const MainView = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFDD0', // Amarillo claro
+    backgroundColor: '#FFFFFF', 
   },
   header: {
     flexDirection: 'row',
@@ -70,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#FFA07A', // Salmón claro
+    backgroundColor: '#e98c00', // Salmón claro
   },
   headerText: {
     fontSize: 24,
@@ -81,7 +104,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logoutButtonText: {
-    fontSize: 18,
+    fontSize: 12,
     color: '#fff',
   },
   body: {
@@ -131,7 +154,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   checkRadiationButton: {
-    backgroundColor: '#6495ED', // Azul acero
+    backgroundColor: '#FF6347', 
     padding: 15,
     borderRadius: 10,
   },
@@ -139,6 +162,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    backgroundColor: 'white', // Color de fondo del contenedor
+    borderRadius: 10, // Ajusta según tu diseño
+    marginHorizontal: 10, // Ajusta según tu diseño
+    justifyContent: 'space-between', // Ajusta según tu diseño
+    paddingHorizontal: 10, // Espaciado horizontal dentro del contenedor
+    paddingVertical: 5, // Espaciado vertical dentro del contenedor
+  },
+  imagen:{
+    width: 120, // 5 cm en puntos
+  height: 120, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
+  },
+  texto: {
+    fontSize: 16, // Ajusta según tu diseño
+    fontWeight: 'bold', // Ajusta según tu diseño
+    marginRight: 10, // Espaciado a la derecha del texto
   },
 });
 
