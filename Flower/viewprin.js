@@ -1,36 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { UserContext } from './UserContext'; // Importa el contexto de usuario
+import Micomponent from './recomendaciones';
+const { userId } = useContext(UserContext); // Obtener el ID del usuario del contexto
 
-const Micomponent = () =>(
-  <View style={styles.imageContainer}>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Aplicate bloqueador solar</Text>
-      <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
-    </View>
-    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-    <Text style={styles.texto}>Usa gorra para el sol</Text>
-  <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
-  </View>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Utiliza sombrilla </Text>
-  <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
-  </View>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Deamasiado sol</Text>
-  <Image source={require('./assets/sudor.png')} style={styles.imagen} />
-</View>
-</View>
-);
 const MainView = ({ navigation }) => {
-  const [showFormButton, setShowFormButton] = React.useState(true);
-
   const handleLogout = () => {
     navigation.navigate('Login');
   };
 
   const handleAnswerForm = () => {
-    // Navegar a la vista del formulario
     navigation.navigate('Formulario');
   };
 
@@ -43,22 +22,19 @@ const MainView = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        {showFormButton ? (
-          <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
-            <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+        <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
+          <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+        </TouchableOpacity>
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
+          <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={true}>
+            <Micomponent />
+            
+          </ScrollView>
+        </View>
+        <TouchableOpacity style={styles.checkRadiationButton}>
+            <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
           </TouchableOpacity>
-        ) : (
-          <View style={styles.recommendationsContainer}>
-            <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
-            <View style={styles.recommendations}>
-            <Micomponent/>
-            </View>
-            <TouchableOpacity style={styles.checkRadiationButton}>
-              <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
-            </TouchableOpacity>
-          </View>
-  
-        )}
       </View>
     </View>
   );
@@ -67,15 +43,16 @@ const MainView = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: '#FFFFFF',
   },
   header: {
+    position:'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#e98c00', // Salmón claro
+    backgroundColor: '#e98c00',
   },
   headerText: {
     fontSize: 24,
@@ -93,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    height:100000,
   },
   answerButton: {
     backgroundColor: '#FF6347',
@@ -106,65 +84,55 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   recommendationsContainer: {
+    maxHeight:600,
     alignItems: 'center',
+    marginTop: 20,
   },
   recommendationsHeader: {
+    padding:50,
+
     fontSize: 20,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginBottom: 10,
   },
-  recommendations: {
+  scrollViewContent: {
+    height:900,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    marginBottom: 20,
   },
-  recommendation: {
-    width: '45%', 
-    borderWidth: 1,
-    borderColor: '#000',
-    marginBottom: 10,
+  imageContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
-  recommendationImage: {
-    width: '80%',
-    height: '80%',
+  imagen: {
+    width: 120,
+    height: 120,
     resizeMode: 'cover',
+    alignSelf: 'center',
+    marginTop: 6,
   },
-  recommendationText: {
-    textAlign: 'center',
+  texto: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
   },
   checkRadiationButton: {
-    backgroundColor: '#FF6347', 
+
+    backgroundColor: '#FF6347',
     padding: 15,
     borderRadius: 10,
+    marginTop: 20,
   },
   checkRadiationButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
-  },
-  imageContainer: {
-    alignItems: 'center',
-    backgroundColor: 'white', // Color de fondo del contenedor
-    borderRadius: 10, // Ajusta según tu diseño
-    marginHorizontal: 10, // Ajusta según tu diseño
-    justifyContent: 'space-between', // Ajusta según tu diseño
-    paddingHorizontal: 10, // Espaciado horizontal dentro del contenedor
-    paddingVertical: 5, // Espaciado vertical dentro del contenedor
-  },
-  imagen:{
-    width: 120, // 5 cm en puntos
-  height: 120, // 5 cm en puntos
-  resizeMode: 'cover',
-  alignSelf: 'center',
-  marginTop: 6,
-  },
-  texto: {
-    fontSize: 16, // Ajusta según tu diseño
-    fontWeight: 'bold', // Ajusta según tu diseño
-    marginRight: 10, // Espaciado a la derecha del texto
   },
 });
 
