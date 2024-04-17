@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native'; // Importa Image
 import axios from 'axios';
 
 const ClimaPage = () => {
@@ -18,6 +18,7 @@ const ClimaPage = () => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('./assets/mapa.jpeg')} style={styles.imagen} /> 
       <TextInput
         style={styles.input}
         placeholder="Ingrese la ciudad"
@@ -41,7 +42,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    padding: 20,
+    backgroundColor: '#FFFFFF'
   },
   input: {
     borderWidth: 1,
@@ -59,6 +61,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: 'red',
     fontSize: 16,
+  },
+  imagen:{
+    width: 150, // 5 cm en puntos
+  height: 150, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
   },
 });
 

@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#e98c00',
+    backgroundColor: '#e98c00', // Salmón claro
   },
   headerText: {
     fontSize: 24,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     height: 100000,
   },
   answerButton: {
-    backgroundColor: '#FF6347',
+    backgroundColor: '#E8A700',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   checkRadiationButton: {
-    backgroundColor: '#6495ED',
+    backgroundColor: '#E8A700',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
