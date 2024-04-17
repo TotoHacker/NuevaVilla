@@ -7,6 +7,7 @@ import FormView from './question';
 import RegisterScreen from './RegisterScreen';
 import HomeScreen from './HomeScreen';
 import { UserContext } from './UserContext';
+import Farmacias from './Farmacias';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const App = () => {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Main" component={MainView} />
           <Stack.Screen name="Formulario" component={FormView} />
+          <Stack.Screen name="Farmacias" component={Farmacias} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

@@ -9,18 +9,22 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-picker/picker": "^2.7.5",
+    "@react-native-mapbox-gl/maps": "^8.6.0-beta.0",
+    "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "axios": "^1.6.8",
-    "expo": "~50.0.14",
+    "expo": "~50.0.17",
     "expo-status-bar": "~1.11.1",
     "express": "^4.19.2",
-    "lottie-react-native": "^6.7.2",
+    "lottie-react-native": "^6.5.1",
     "mysql": "^2.18.1",
     "react": "18.2.0",
     "react-native": "0.73.6",
-    "react-native-gesture-handler": "^2.16.0"
+    "react-native-alert": "^1.0.3",
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-maps": "^1.14.0",
+    "react-native-vector-icons": "^10.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

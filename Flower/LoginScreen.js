@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Button, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
@@ -8,6 +8,7 @@ const LoginScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -16,15 +17,27 @@ const LoginScreen = ({ navigation }) => {
         correo_electronico: email,
         contrasena: password,
       });
-      const userIdFromServer = response.data.id;
-      setUserId(userIdFromServer); // Establece el ID del usuario en el contexto de usuario
-      // Después de establecer el ID del usuario, navega a la siguiente pantalla
-      navigation.navigate('Main'); // Por ejemplo, navega a la pantalla principal de la aplicación
+      if (response.status === 200) {
+        const userIdFromServer = response.data.id;
+        setUserId(userIdFromServer); // Establece el ID del usuario en el contexto de usuario
+        // Después de establecer el ID del usuario, navega a la siguiente pantalla
+        navigation.navigate('Main'); // Por ejemplo, navega a la pantalla principal de la aplicación
+      } else {
+        // El inicio de sesión falló, mostrar mensaje de error
+        setErrorMessage('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+      }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error.message);
+      console.error('Error al iniciar sesión: ', error.message);
+      // El inicio de sesión falló debido a un error de red, mostrar mensaje de error
+      setErrorMessage('Error de conexión. Por favor, comprueba tu conexión a internet.');
     }
   };
 
+  const handleRegister = () => {
+    // Redirigir a la pantalla de registro
+    navigation.navigate('Register');
+  };
+  
   return (
     <View style={styles.container}>
       <TextInput
@@ -46,7 +59,11 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
       <Button title="Iniciar Sesión" onPress={handleLogin} />
+      <TouchableOpacity onPress={handleRegister}>
+        <Text style={styles.registerText}>¿No tienes una cuenta? Regístrate aquí</Text>
+      </TouchableOpacity>
     </View>
   );
 };
