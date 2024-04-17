@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#FFA07A', // Salmón claro
     backgroundColor: '#e98c00', // Salmón claro
   },
   headerText: {
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   answerButton: {
-    backgroundColor: '#FF6347',
+    backgroundColor: '#E8A700',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   checkRadiationButton: {
-    backgroundColor: '#6495ED',
+    backgroundColor: '#E8A700',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,

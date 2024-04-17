@@ -3,7 +3,7 @@ import { View, Button, Text, StyleSheet, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
-
+import { Image } from 'react-native';
 const FormView = ({ navigation }) => {
   const { userId } = useContext(UserContext); // Obtener el ID del usuario del contexto
   const [enfermedades, setEnfermedades] = useState([]);
@@ -60,6 +60,7 @@ const FormView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+        <Image source={require('./assets/enfermera.jpeg')} style={styles.imagen} />
       <Text style={styles.label}>Selecciona una enfermedad:</Text>
       <Picker
         selectedValue={selectedEnfermedad}
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#FFFFFF',
   },
   label: {
     fontSize: 18,
@@ -99,6 +100,13 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginBottom: 15,
+  },
+  imagen:{
+    width: 150, // 5 cm en puntos
+  height: 150, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
   },
 });
 
