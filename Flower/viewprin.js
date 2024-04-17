@@ -1,28 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import { Image } from 'react-native';
 import { ScrollView } from 'react-native';
+import Micomponent from './recomendaciones';
 
-const Micomponent = () =>(
-  <View style={styles.imageContainer}>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Aplicate bloqueador solar</Text>
-      <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
-    </View>
-    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-    <Text style={styles.texto}>Usa gorra para el sol</Text>
-  <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
-  </View>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Utiliza sombrilla </Text>
-  <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
-  </View>
-  <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-  <Text style={styles.texto}>Deamasiado sol</Text>
-  <Image source={require('./assets/sudor.png')} style={styles.imagen} />
-</View>
-</View>
-);
 const MainView = ({ navigation }) => {
   const handleLogout = () => {
     navigation.navigate('Login');
