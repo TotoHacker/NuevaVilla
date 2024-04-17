@@ -32,7 +32,9 @@ const MainView = ({ navigation }) => {
     navigation.navigate('Formulario');
   };
 
-
+  const handlepronostico = () => {
+    navigation.navigate('pronostico');
+  };
 
   return (
     <ScrollView >
@@ -57,6 +59,9 @@ const MainView = ({ navigation }) => {
   <View style={styles.body}>
     <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
       <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
+      <Text style={styles.answerButtonText}>Clima</Text>
     </TouchableOpacity>
   </View>
 </View>
