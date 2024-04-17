@@ -2,21 +2,25 @@ import React from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => { // Agregar la prop "navigation"
+
   const [name, setName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://192.168.0.8:3000/register', {
+      const response = await axios.post('http://192.168.0.9:8080/signup', {
         nombre: name,
-        UsuoCorr: email,
-        contraseña: password,
+        correo_electronico: email,
+        contrasena: password,
       });
-      console.log(response.data); 
+      console.log(response.data);
+
+      // Si el registro es exitoso, navegar a la pantalla de inicio de sesión
+      navigation.navigate('Login'); // Navegar a la pantalla de inicio de sesión
+
     } catch (error) {
       console.error('Error al registrar usuario:', error.message);
     }
@@ -29,12 +33,6 @@ const RegisterScreen = () => {
           placeholder="Nombre"
           value={name}
           onChangeText={setName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Apellido"
-          value={lastName}
-          onChangeText={setLastName}
           style={styles.input}
         />
         <TextInput

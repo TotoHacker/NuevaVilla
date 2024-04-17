@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Button, Text, StyleSheet } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
-const FormView = () => {
-  const [enfermedad, setEnfermedad] = useState('');
-  const [sintoma, setSintoma] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [grado, setGrado] = useState('');
-  const [observacion, setObservacion] = useState('');
-  const [tratamiento, setTratamiento] = useState('');
+const FormView = ({ navigation }) => {
+  const { userId } = useContext(UserContext); // Obtener el ID del usuario del contexto
+  const [enfermedades, setEnfermedades] = useState([]);
+  const [selectedEnfermedad, setSelectedEnfermedad] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [enfermedadesSeleccionadas, setEnfermedadesSeleccionadas] = useState([]);
 
+  // Función para cargar las enfermedades existentes al montar el componente
+  useEffect(() => {
+    fetchEnfermedades();
+  }, []);
+
+  // Función para obtener las enfermedades existentes desde el servidor
+  const fetchEnfermedades = async () => {
+    try {
+      const response = await axios.get('http://192.168.0.9:8080/enfermedades');
+      setEnfermedades(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al obtener las enfermedades:', error.message);
+    }
+  };
+
+
+  // Función para manejar el envío del formulario
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://192.168.0.8:3000/formulario', {
-        enfermedad,
-        sintoma,
-        fecha,
-        grado,
-        observacion,
-        tratamiento,
+      // Obtén solo los IDs de enfermedades seleccionadas
+      const enfermedadesIds = enfermedadesSeleccionadas.map(enfermedad => enfermedad.id);
+      // Enviar el formulario con el ID del usuario y los IDs de las enfermedades seleccionadas
+      const response = await axios.post('http://192.168.0.9:8080/usuarios/enfermedades', {
+        id_usuario: userId,
+        id_enfermedades: enfermedadesIds, // Cambiar a id_enfermedades
       });
       console.log(response.data); // Muestra la respuesta del servidor en la consola
       // Aquí puedes manejar la respuesta del servidor como desees (por ejemplo, mostrar un mensaje de éxito)
@@ -27,56 +45,37 @@ const FormView = () => {
       // Aquí puedes manejar el error como desees (por ejemplo, mostrar un mensaje de error)
     }
   };
+  
+
+
+  // Función para agregar una enfermedad a las seleccionadas
+  const handleAddEnfermedad = () => {
+    const enfermedadSeleccionada = enfermedades.find(enfermedad => enfermedad.id === selectedEnfermedad);
+    if (selectedEnfermedad && !enfermedadesSeleccionadas.some(enf => enf.id === enfermedadSeleccionada.id)) {
+      setEnfermedadesSeleccionadas([...enfermedadesSeleccionadas, enfermedadSeleccionada]);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Enfermedad:</Text>
-      <TextInput
-        style={styles.input}
-        value={enfermedad}
-        onChangeText={setEnfermedad}
-        placeholder="Enfermedad"
-      />
-      
-      <Text style={styles.label}>Síntoma:</Text>
-      <TextInput
-        style={styles.input}
-        value={sintoma}
-        onChangeText={setSintoma}
-        placeholder="Síntoma"
-      />
-      
-      <Text style={styles.label}>Fecha:</Text>
-      <TextInput
-        style={styles.input}
-        value={fecha}
-        onChangeText={setFecha}
-        placeholder="Fecha"
-      />
-      
-      <Text style={styles.label}>Grado:</Text>
-      <TextInput
-        style={styles.input}
-        value={grado}
-        onChangeText={setGrado}
-        placeholder="Grado"
-      />
-      
-      <Text style={styles.label}>Observación:</Text>
-      <TextInput
-        style={styles.input}
-        value={observacion}
-        onChangeText={setObservacion}
-        placeholder="Observación"
-      />
-      
-      <Text style={styles.label}>Tratamiento:</Text>
-      <TextInput
-        style={styles.input}
-        value={tratamiento}
-        onChangeText={setTratamiento}
-        placeholder="Tratamiento"
-      />
+      <Text style={styles.label}>Selecciona una enfermedad:</Text>
+      <Picker
+        selectedValue={selectedEnfermedad}
+        onValueChange={(itemValue) => setSelectedEnfermedad(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Selecciona una enfermedad" value="" />
+        {enfermedades.map((enfermedad) => (
+          <Picker.Item key={enfermedad.id} label={enfermedad.nombre} value={enfermedad.id} />
+        ))}
+      </Picker>
+
+      <Button title="Agregar" onPress={handleAddEnfermedad} />
+
+      <Text style={styles.label}>Enfermedades seleccionadas:</Text>
+      {enfermedadesSeleccionadas.map((enfermedad, index) => (
+        <Text key={index}>{enfermedad.nombre}</Text>
+      ))}
 
       <Button title="Enviar formulario" onPress={handleSubmit} />
     </View>
@@ -95,13 +94,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: '#333',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+  picker: {
+    height: 50,
     marginBottom: 15,
-    backgroundColor: '#fff',
   },
 });
 
