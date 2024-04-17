@@ -21,7 +21,7 @@ const RegisterScreen = ({ navigation }) => {
     
 
     try {
-      const response = await axios.post('http://10.10.52.124:8080/signup', {
+      const response = await axios.post('http://10.10.52.160:8080/signup', {
         nombre: name,
         correo_electronico: email,
         contrasena: password,

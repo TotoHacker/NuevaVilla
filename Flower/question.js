@@ -19,7 +19,7 @@ const FormView = ({ navigation }) => {
   // Función para obtener las enfermedades existentes desde el servidor
   const fetchEnfermedades = async () => {
     try {
-      const response = await axios.get('http://10.10.52.124:8080/enfermedades');
+      const response = await axios.get('http://10.10.52.160:8080/enfermedades');
       setEnfermedades(response.data);
       setLoading(false);
     } catch (error) {
@@ -34,7 +34,7 @@ const FormView = ({ navigation }) => {
       // Obtén solo los IDs de enfermedades seleccionadas
       const enfermedadesIds = enfermedadesSeleccionadas.map(enfermedad => enfermedad.id);
       // Enviar el formulario con el ID del usuario y los IDs de las enfermedades seleccionadas
-      const response = await axios.post('http://10.10.52.124:8080/usuarios/enfermedades', {
+      const response = await axios.post('http://10.10.52.160:8080/usuarios/enfermedades', {
         id_usuario: userId,
         id_enfermedades: enfermedadesIds, // Cambiar a id_enfermedades
       });
