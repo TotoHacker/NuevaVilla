@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Button, Text, StyleSheet } from 'react-native';
+import { View, Button, Text, StyleSheet, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
@@ -39,10 +39,12 @@ const FormView = ({ navigation }) => {
         id_enfermedades: enfermedadesIds, // Cambiar a id_enfermedades
       });
       console.log(response.data); // Muestra la respuesta del servidor en la consola
-      // Aquí puedes manejar la respuesta del servidor como desees (por ejemplo, mostrar un mensaje de éxito)
+      Alert.alert('¡Exito!','Se a registrado con exito la(s) enfermedades');
+      navigation.navigate('Main');// Aquí puedes manejar la respuesta del servidor como desees (por ejemplo, mostrar un mensaje de éxito)
     } catch (error) {
       console.error('Error al enviar el formulario:', error.message);
       // Aquí puedes manejar el error como desees (por ejemplo, mostrar un mensaje de error)
+      Alert.alert('¡Error!','No se han podido registrar la(s) enfermedades, intentelo de nuevo');
     }
   };
   

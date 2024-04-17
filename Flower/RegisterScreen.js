@@ -1,15 +1,27 @@
-import React from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native'; // Importa Alert para mostrar mensajes de error
 import axios from 'axios';
 
-const RegisterScreen = ({ navigation }) => { // Agregar la prop "navigation"
-
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
+const RegisterScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleRegister = async () => {
+    // Validar campos antes de enviar la solicitud de registro
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Todos los campos son obligatorios.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden.');
+      return;
+    }
+    if(email !='/^[^\s@]+@[^\s@]+\.[^\s@]+$/'){
+      Alert.alert('El campo email debe contener un dato valido','ejemplo@ejemplo.com')
+    }
+
     try {
       const response = await axios.post('http://192.168.0.9:8080/signup', {
         nombre: name,
@@ -20,9 +32,9 @@ const RegisterScreen = ({ navigation }) => { // Agregar la prop "navigation"
 
       // Si el registro es exitoso, navegar a la pantalla de inicio de sesión
       navigation.navigate('Login'); // Navegar a la pantalla de inicio de sesión
-
     } catch (error) {
       console.error('Error al registrar usuario:', error.message);
+  
     }
   };
 
@@ -39,8 +51,10 @@ const RegisterScreen = ({ navigation }) => { // Agregar la prop "navigation"
           placeholder="Correo electrónico"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address" // Establece el tipo de teclado a email-address
           style={styles.input}
         />
+
         <TextInput
           placeholder="Contraseña"
           value={password}

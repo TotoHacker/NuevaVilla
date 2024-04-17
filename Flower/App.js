@@ -8,6 +8,7 @@ import RegisterScreen from './RegisterScreen';
 import HomeScreen from './HomeScreen';
 import { UserContext } from './UserContext';
 
+
 const Stack = createStackNavigator();
 
 const App = () => {
