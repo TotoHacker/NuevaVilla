@@ -25,15 +25,22 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const handleRegister = () => {
+    // Redirigir a la pantalla de registro
+    navigation.navigate('Register');
+  };
+
   return (
+    
     <View style={styles.container}>
+
       <TextInput
-        style={styles.input}
         placeholder="Nombre"
         value={name}
         onChangeText={setName}
+        style={styles.input}
       />
-      <TextInput
+       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
         value={email}
