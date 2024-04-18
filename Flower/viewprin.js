@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Image } from 'react-native';
-
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { ScrollView } from 'react-native';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
 const MainView = ({ navigation }) => {
@@ -16,28 +15,13 @@ const MainView = ({ navigation }) => {
     navigation.navigate('Formulario');
   };
 
-  const handleCheckRadiation = async () => {
-    try {
-      const response = await fetch('http://10.10.60.180/sensor');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.text(); // Leer el cuerpo de la respuesta directamente
-      setSensorData(data);
-      console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
-      handleUVActions
-
-      // Realiza las acciones basadas en los datos de radiación UV
-      handleUVActions(data);
-    } catch (error) {
-      console.error('Error fetching sensor data:', error);
-    }
+  const handleUVActions = (data) => {
     if (data) {
       const parsedData = JSON.parse(data);
       const radiacionesUV = parsedData.radiaciones_uv.map(Number); // Convertir los valores a números
       const minValue = Math.min(...radiacionesUV);
       const DivMaxUV = minValue / 4;
-  
+
       if (sensorData >= minValue) {
         // Peligro
         return (
@@ -89,18 +73,20 @@ const MainView = ({ navigation }) => {
       }
     }
   };
-  
-  const fetchMaxUV = async () => {
+
+  const handleCheckRadiation = async () => {
     try {
-      const response = await fetch(`http://10.10.52.160:8080/maxUv/${userId}`);
+      const response = await fetch('http://192.168.0.8/sensor');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      // Aquí puedes hacer algo con los datos de radiación UV obtenidos, por ejemplo, imprimir en la consola
-      console.log('Datos de radiación UV:', data);
+      const data = await response.text(); // Leer el cuerpo de la respuesta directamente
+      setSensorData(data);
+      console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
+
+      // Realiza las acciones basadas en los datos de radiación UV
     } catch (error) {
-      console.error('Error fetching max UV:', error);
+      console.error('Error fetching sensor data:', error);
     }
   };
 
@@ -121,19 +107,13 @@ const MainView = ({ navigation }) => {
 
         <View style={styles.recommendationsContainer}>
           <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
-
-          {/*aqui iran las imagenes dependiendo handleUVActions */}
-          {handleUVActions(data)}
+          
+          {/* Renderizar las imágenes según las acciones de UV */}
+          {handleUVActions(sensorData)}
 
           <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
             <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
-            <Text style={styles.answerButtonText}>Contestar Formulario</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.body}>
           <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
             <Text style={styles.answerButtonText}>Contestar Formulario</Text>
           </TouchableOpacity>
@@ -155,7 +135,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#e98c00',
-    backgroundColor: '#e98c00', // Salmón claro
   },
   headerText: {
     fontSize: 24,
@@ -176,7 +155,7 @@ const styles = StyleSheet.create({
     height: 100000,
   },
   answerButton: {
-    backgroundColor: '#E8A700',
+    backgroundColor: '#FF6347',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
@@ -202,7 +181,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   checkRadiationButton: {
-    backgroundColor: '#E8A700',
+    backgroundColor: '#6495ED',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -213,6 +192,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  imageBackground: {
+    width: 200,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  texto: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  imagen: {
+    width: 100,
+    height: 100,
   },
 });
 
