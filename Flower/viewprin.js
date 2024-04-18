@@ -57,12 +57,24 @@ const MainView = ({ navigation }) => {
   };
 
   const Micomponent = ({ data, minRadiacion }) => {
-    const min = minRadiacion / 4;
-    const datAlt = minRadiacion - min;
-    const datMed = minRadiacion - (2 * min);
+    // Verifica si minRadiacion es null y asigna valores predeterminados en ese caso
+    const min = minRadiacion ? minRadiacion / 4 : null;
+    const datAlt = minRadiacion ? minRadiacion - min : null;
+    const datMed = minRadiacion ? minRadiacion - (2 * min) : null;
+  
+    // Verifica si minRadiacion es null y muestra el mensaje predeterminado en ese caso
+    if (minRadiacion === null) {
+      return (
+        <View style={styles.row}>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/no.jpeg')} style={styles.imagenN} />
+            <Text style={styles.textoS}>No tienes ninguna enfermedad registrada</Text>
+            <Text style={styles.textoS}>Contesta el formulario</Text>
 
-    // Realiza las validaciones basadas en los datos del sensor y la radiación mínima
-    if (data >= minRadiacion) {
+          </View>
+        </View>
+      );
+    } else if (data >= minRadiacion) {
       return (
         <View style={styles.row}>
           <View style={styles.imageContainer}>
@@ -111,9 +123,10 @@ const MainView = ({ navigation }) => {
         </View>
       );
     } else {
-      return null; // Si los datos son insuficientes o no cumplen con ninguna condición, no mostrar nada
+      return null;
     }
   }; 
+  
 
   const handleAnswerForm = () => {
     navigation.navigate('Formulario');
@@ -229,8 +242,20 @@ const styles = StyleSheet.create({
     height: 150,
     marginBottom: 10,
   },
+  imagenN: {
+    width: 300,
+    height: 300,
+    marginBottom: 10,
+  },
   texto: {
     textAlign: 'center',
+  },
+  textoS: {
+    fontSize:18,
+    textAlign: 'center',
+    width:200,
+    color:'#E8A700',
+    margin:5,
   },
   checkRadiationButton: {
     backgroundColor: '#E8A700',
