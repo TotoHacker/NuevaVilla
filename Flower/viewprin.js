@@ -23,7 +23,7 @@ const MainView = ({ navigation }) => {
       const radiacionesUV = data.radiaciones_uv;
       console.log('Datos de radiación UV:', radiacionesUV);
       
-      if (radiacionesUV.length > 0) {
+      if (radiacionesUV && radiacionesUV.length > 0) {
         // Encuentra el valor mínimo de radiación
         const minRadiacion = Math.min(...radiacionesUV);
         console.log('Radiación UV más baja:', minRadiacion);
@@ -31,12 +31,15 @@ const MainView = ({ navigation }) => {
         // Hacer algo con el valor mínimo, como mostrar un mensaje en la consola
       } else {
         console.log('No se ha añadido ninguna enfermedad.');
+        // Envía una alerta si no se han añadido enfermedades
+        alert('No tienes enfermedades añadidas. Por favor, contesta el formulario.');
       }
-
+  
     } catch (error) {
       console.error('Error fetching max UV:', error);
     }
   };
+  
 
   const handleCheckRadiation = async () => {
     try {
@@ -67,10 +70,8 @@ const MainView = ({ navigation }) => {
       return (
         <View style={styles.row}>
           <View style={styles.imageContainer}>
-            <Image source={require('./assets/no.jpeg')} style={styles.imagenN} />
-            <Text style={styles.textoS}>No tienes ninguna enfermedad registrada</Text>
-            <Text style={styles.textoS}>Contesta el formulario</Text>
-
+            <Image source={require('./assets/espera.png')} style={styles.imagenN} />
+            <Text style={styles.textoS}>Presiona Checar radiacion para dar recomendaciones</Text>
           </View>
         </View>
       );
