@@ -1,204 +1,251 @@
+import React, { useState, useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { ScrollView } from 'react-native';
+import { UserContext } from './UserContext'; // Importa el contexto de usuario
 
+const MainView = ({ navigation }) => {
+  const { userId } = useContext(UserContext); // Obtener el ID del usuario del contexto
+  const [sensorData, setSensorData] = useState(null); // Definir el estado sensorData y su función setSensorData
+  const [minRadiacion, setMinRadiacion] = useState(null); // Estado para almacenar la radiación mínima
 
-  import React from 'react';
-  import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-  import { Image } from 'react-native';
-  import { ScrollView } from 'react-native';
-  
-  const Micomponent = () =>(
-    <View style={styles.imageContainer}>
-    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-    <Text style={styles.texto}>Aplicate bloqueador solar</Text>
-        <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
-      </View>
-      <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-      <Text style={styles.texto}>Usa gorra para el sol</Text>
-    <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
-    </View>
-    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-    <Text style={styles.texto}>Utiliza sombrilla </Text>
-    <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
-    </View>
-    <View style={[styles.imageBackground, { backgroundColor: 'white' }]}>
-    <Text style={styles.texto}>Deamasiado sol</Text>
-    <Image source={require('./assets/sudor.png')} style={styles.imagen} />
-  </View>
-  </View>
-  );
-  const MainView = ({ navigation }) => {
-    const handleLogout = () => {
-      navigation.navigate('Login');
-    };
-    const handleCheckRadiation = async () => {
-      try {
-        const response = await fetch('http://192.168.0.8/sensor');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.text(); // Leer el cuerpo de la respuesta directamente
-        setSensorData(data);
-        console.log('Radiación UV del sensor:', data); // Aquí data será el valor numérico del sensor
-  
-      } catch (error) {
-        console.error('Error fetching sensor data:', error);
-      }
-    };
-    const handleAnswerForm = () => {
-      navigation.navigate('Formulario');
-    };
-  
-    const handlepronostico = () => {
-      navigation.navigate('pronostico');
-    };
-  
-    return (
-      <ScrollView >
-      <View style={styles.container}>
-    <View style={styles.header}>
-      <Text style={styles.headerText}>Flower Shield</Text>
-      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
-    </View>
-  
-    <View style={styles.recommendationsContainer}>
-      <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
-      <View style={styles.recommendations}>
-        <Micomponent />
-      </View>
-      <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
-        <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
-      </TouchableOpacity>
-    </View>
-  
-    <View style={styles.body}>
-      <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
-        <Text style={styles.answerButtonText}>Contestar Formulario</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
-        <Text style={styles.answerButtonText}>Clima</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-  
-        </ScrollView>
-    );
+  const handleLogout = () => {
+    navigation.navigate('Login');
   };
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#FFFDD0', // Amarillo claro
-      backgroundColor: '#FFFFFF', 
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 15,
-      backgroundColor: '#e98c00', // Salmón claro
-    },
-    headerText: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#fff',
-    },
-    logoutButton: {
-      padding: 10,
-    },
-    logoutButtonText: {
-      fontSize: 12,
-      color: '#fff',
-    },
-    body: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    answerButton: {
-      backgroundColor: '#E8A700',
-      paddingVertical: 15,
-      paddingHorizontal: 40,
-      borderRadius: 10,
-      elevation: 3,
-      marginBottom: 20,
-      justifyContent: 'center', // Añadimos esta línea para centrar el contenido verticalmente
-      alignItems: 'center', // Añadimos esta línea para centrar el contenido horizontalmente
-    },
-    
-    answerButtonText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#fff',
-    },
-    recommendationsContainer: {
-      alignItems: 'center',
-    },
-    recommendationsHeader: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginVertical: 10,
-    },
-    recommendations: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-      marginBottom: 20,
-    },
-    recommendation: {
-      width: '45%', 
-      borderWidth: 1,
-      borderColor: '#000',
-      marginBottom: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    recommendationImage: {
-      width: '80%',
-      height: '80%',
-      resizeMode: 'cover',
-    },
-    recommendationText: {
-      textAlign: 'center',
-    },
-    checkRadiationButton: {
-      backgroundColor: '#E8A700',
-      padding: 15,
-      borderRadius: 10,
-      marginBottom: 20,
-      justifyContent: 'center', // Añadimos esta línea para centrar el contenido verticalmente
-      alignItems: 'center', // Añadimos esta línea para centrar el contenido horizontalmente
-    },
-    
-    checkRadiationButtonText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#fff',
-    },
-  
-    imageContainer: {
-      alignItems: 'center',
-      backgroundColor: 'white', // Color de fondo del contenedor
-      borderRadius: 10, // Ajusta según tu diseño
-      marginHorizontal: 10, // Ajusta según tu diseño
-      justifyContent: 'space-between', // Ajusta según tu diseño
-      paddingHorizontal: 10, // Espaciado horizontal dentro del contenedor
-      paddingVertical: 5, // Espaciado vertical dentro del contenedor
-    },
-    imagen:{
-      width: 120, // 5 cm en puntos
-    height: 120, // 5 cm en puntos
-    resizeMode: 'cover',
-    alignSelf: 'center',
-    marginTop: 6,
-    },
-    texto: {
-      fontSize: 16, // Ajusta según tu diseño
-      fontWeight: 'bold', // Ajusta según tu diseño
-      marginRight: 10, // Espaciado a la derecha del texto
-    },
-  });
-  
-  export default MainView;
-  
-  
+
+  const fetchMaxUV = async () => {
+    try {
+      const response = await fetch(`http://192.168.0.8:8080/maxUv/${userId}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      // Accede a los valores de radiación UV
+      const radiacionesUV = data.radiaciones_uv;
+      console.log('Datos de radiación UV:', radiacionesUV);
+      
+      if (radiacionesUV.length > 0) {
+        // Encuentra el valor mínimo de radiación
+        const minRadiacion = Math.min(...radiacionesUV);
+        console.log('Radiación UV más baja:', minRadiacion);
+        setMinRadiacion(minRadiacion); // Almacena la radiación mínima en el estado
+        // Hacer algo con el valor mínimo, como mostrar un mensaje en la consola
+      } else {
+        console.log('No se ha añadido ninguna enfermedad.');
+      }
+
+    } catch (error) {
+      console.error('Error fetching max UV:', error);
+    }
+  };
+
+  const handleCheckRadiation = async () => {
+    try {
+      const response = await fetch('http://192.168.0.14/sensor');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setSensorData(data);
+      console.log('Sensor data:', data);
+      
+      // Llama a fetchMaxUV() para obtener los datos de radiación UV
+      await fetchMaxUV();
+
+    } catch (error) {
+      console.error('Error fetching sensor data:', error);
+    }
+  };
+
+  const Micomponent = ({ data, minRadiacion }) => {
+    const min = minRadiacion / 4;
+    const datAlt = minRadiacion - min;
+    const datMed = minRadiacion - (2 * min);
+
+    // Realiza las validaciones basadas en los datos del sensor y la radiación mínima
+    if (data >= minRadiacion) {
+      return (
+        <View style={styles.row}>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/no_salir.png')} style={styles.imagen} />
+            <Text style={styles.texto}>No puedes salir hoy</Text>
+          </View>
+        </View>
+      );
+    } else if (data >= datAlt) {
+      return (
+        <View style={styles.row}>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Aplica bloqueador solar</Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Utiliza sombrilla</Text>
+          </View>
+        </View>
+      );
+    } else if (data >= datMed) {
+      return (
+        <View style={styles.row}>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Aplica bloqueador solar</Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Usa gorra para el sol</Text>
+          </View>
+        </View>
+      );
+    } else if (data >= min) {
+      return (
+        <View style={styles.row}>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/salir.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Despejado, puedes salir hoy</Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+            <Text style={styles.texto}>Usa gorra para el sol</Text>
+          </View>
+        </View>
+      );
+    } else {
+      return null; // Si los datos son insuficientes o no cumplen con ninguna condición, no mostrar nada
+    }
+  }; 
+
+  const handleAnswerForm = () => {
+    navigation.navigate('Formulario');
+  };
+
+  const handlepronostico = () => {
+    navigation.navigate('pronostico');
+  };
+
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Flower Shield</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
+          <View style={styles.recommendations}>
+            <Micomponent data={sensorData} minRadiacion={minRadiacion} />
+          </View>
+          <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
+            <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.body}>
+          <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
+            <Text style={styles.answerButtonText}>Contestar Formulario</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
+            <Text style={styles.answerButtonText}>Clima</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#e98c00',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  logoutButton: {
+    padding: 10,
+  },
+  logoutButtonText: {
+    fontSize: 12,
+    color: '#fff',
+  },
+  body: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  answerButton: {
+    backgroundColor: '#E8A700',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    elevation: 3,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  answerButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  recommendationsContainer: {
+    alignItems: 'center',
+  },
+  recommendationsHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  recommendations: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  imageContainer: {
+    alignItems: 'center',
+  },
+  imagen: {
+    width: 150,
+    height: 150,
+    marginBottom: 10,
+  },
+  texto: {
+    textAlign: 'center',
+  },
+  checkRadiationButton: {
+    backgroundColor: '#E8A700',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  checkRadiationButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+});
+
+export default MainView;
