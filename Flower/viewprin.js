@@ -1,15 +1,56 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { ScrollView } from 'react-native';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
+import { LineChart } from 'react-native-chart-kit';
 
 const MainView = ({ navigation }) => {
   const { userId } = useContext(UserContext); // Obtener el ID del usuario del contexto
-  const [sensorData, setSensorData] = useState(null); // Definir el estado sensorData y su función setSensorData
+  const [sensorData, setSensorData] = useState([]); // Definir el estado sensorData y su función setSensorData
   const [minRadiacion, setMinRadiacion] = useState(null); // Estado para almacenar la radiación mínima
+
+  useEffect(() => {
+    obtenerDatosSensor();
+    const intervalId = setInterval(obtenerDatosSensor, 2000); // Actualizar cada 2 segundos
+    return () => clearInterval(intervalId); // Limpiar el intervalo cuando el componente se desmonte
+  }, []); // Llamar a obtenerDatosSensor() cuando el componente se monta
 
   const handleLogout = () => {
     navigation.navigate('Login');
+  };
+
+  // Consumo de la API para traer los datos de la tabla sensor según el ID del usuario
+  const obtenerDatosSensor = async () => {
+    try {
+      const response = await fetch(`http://192.168.0.8:8080/sensor/${userId}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos del sensor');
+      }
+      const data = await response.json();
+      console.log('Datos del sensor obtenidos:', data);
+      setSensorData(data);
+    } catch (error) {
+      console.error('Error al obtener los datos del sensor:', error);
+    }
+  };
+
+  // Consumo de la API para subir los datos del sensor
+  const subirDatosSensor = async (data) => {
+    try {
+      const response = await fetch(`http://192.168.0.8:8080/sensor/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ datoSensor: data }), // Envía el dato del sensor en el cuerpo de la solicitud
+      });
+      if (!response.ok) {
+        throw new Error('Error al subir los datos del sensor');
+      }
+      console.log('Datos del sensor subidos correctamente');
+    } catch (error) {
+      console.error('Error al subir los datos del sensor:', error);
+    }
   };
 
   const fetchMaxUV = async () => {
@@ -39,7 +80,6 @@ const MainView = ({ navigation }) => {
       console.error('Error fetching max UV:', error);
     }
   };
-  
 
   const handleCheckRadiation = async () => {
     try {
@@ -53,6 +93,7 @@ const MainView = ({ navigation }) => {
       
       // Llama a fetchMaxUV() para obtener los datos de radiación UV
       await fetchMaxUV();
+      await subirDatosSensor(data);
 
     } catch (error) {
       console.error('Error fetching sensor data:', error);
@@ -60,74 +101,71 @@ const MainView = ({ navigation }) => {
   };
 
   const Micomponent = ({ data, minRadiacion }) => {
-    // Verifica si minRadiacion es null y asigna valores predeterminados en ese caso
-    const min = minRadiacion ? minRadiacion / 4 : null;
-    const datAlt = minRadiacion ? minRadiacion - min : null;
-    const datMed = minRadiacion ? minRadiacion - (2 * min) : null;
-  
     // Verifica si minRadiacion es null y muestra el mensaje predeterminado en ese caso
     if (minRadiacion === null) {
       return (
         <View style={styles.row}>
           <View style={styles.imageContainer}>
             <Image source={require('./assets/espera.png')} style={styles.imagenN} />
-            <Text style={styles.textoS}>Presiona Checar radiacion para dar recomendaciones</Text>
-          </View>
-        </View>
-      );
-    } else if (data >= minRadiacion) {
-      return (
-        <View style={styles.row}>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/no_salir.png')} style={styles.imagen} />
-            <Text style={styles.texto}>No puedes salir hoy</Text>
-          </View>
-        </View>
-      );
-    } else if (data >= datAlt) {
-      return (
-        <View style={styles.row}>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Aplica bloqueador solar</Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Utiliza sombrilla</Text>
-          </View>
-        </View>
-      );
-    } else if (data >= datMed) {
-      return (
-        <View style={styles.row}>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Aplica bloqueador solar</Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Usa gorra para el sol</Text>
-          </View>
-        </View>
-      );
-    } else if (data >= min) {
-      return (
-        <View style={styles.row}>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/salir.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Despejado, puedes salir hoy</Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
-            <Text style={styles.texto}>Usa gorra para el sol</Text>
+            <Text style={styles.textoS}>Presiona Checar radiación para dar recomendaciones</Text>
           </View>
         </View>
       );
     } else {
-      return null;
+      const dataPoint = data.length > 0 ? data[data.length - 1].datoSensor : null;
+      if (dataPoint === null) {
+        return null;
+      } else if (dataPoint >= minRadiacion) {
+        return (
+          <View style={styles.row}>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/no_salir.png')} style={styles.imagen} />
+              <Text style={styles.texto}>No puedes salir hoy</Text>
+            </View>
+          </View>
+        );
+      } else if (dataPoint >= minRadiacion - minRadiacion / 4) {
+        return (
+          <View style={styles.row}>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Aplica bloqueador solar</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/sombrilla.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Utiliza sombrilla</Text>
+            </View>
+          </View>
+        );
+      } else if (dataPoint >= minRadiacion - (minRadiacion / 4) * 2) {
+        return (
+          <View style={styles.row}>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/crema_solar.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Aplica bloqueador solar</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Usa gorra para el sol</Text>
+            </View>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.row}>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/salir.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Despejado, puedes salir hoy</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image source={require('./assets/gorrasol.png')} style={styles.imagen} />
+              <Text style={styles.texto}>Usa gorra para el sol</Text>
+            </View>
+          </View>
+        );
+      }
     }
   }; 
-  
 
   const handleAnswerForm = () => {
     navigation.navigate('Formulario');
@@ -146,18 +184,58 @@ const MainView = ({ navigation }) => {
             <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
           </TouchableOpacity>
         </View>
-
         <View style={styles.recommendationsContainer}>
           <Text style={styles.recommendationsHeader}>Recomendaciones:</Text>
           <View style={styles.recommendations}>
             <Micomponent data={sensorData} minRadiacion={minRadiacion} />
           </View>
-          <TouchableOpacity style={styles.checkRadiationButton} onPress={handleCheckRadiation}>
-            <Text style={styles.checkRadiationButtonText}>Checar Radiación de Hoy</Text>
-          </TouchableOpacity>
+          
         </View>
 
+        {/* Gráfica de datos del sensor */}
+        <Text style={styles.chartHeader}>Radicacion de hoy</Text>
+        {sensorData && sensorData.length > 0 && (
+          <LineChart
+            data={{
+              labels: sensorData.map((dataPoint, index) =>`Dato ${index + 1}`), // Etiquetas del eje X (índices de los datos)
+              datasets: [
+                {
+                  data: sensorData.map(dataPoint => parseFloat(dataPoint.datoSensor)), // Datos del sensor convertidos a números
+                },
+              ],
+            }}
+            width={400}
+            height={200}
+            yAxisLabel="Uv "
+            yAxisSuffix=""
+            chartConfig={{
+              backgroundColor: '#FFFFFF',
+              backgroundGradientFrom: '#FFFFFF',
+              backgroundGradientTo: '#FFFFFF',
+              decimalPlaces: 1,
+              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: '7',
+                strokeWidth: '2',
+                stroke: '#E8A700',
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+          />
+        )}
+
         <View style={styles.body}>
+        <TouchableOpacity style={styles.answerButton} onPress={handleCheckRadiation}>
+            <Text style={styles.answerButtonText}>Checar Radiación de Hoy</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
             <Text style={styles.answerButtonText}>Contestar Formulario</Text>
           </TouchableOpacity>
@@ -209,6 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    width:350,
   },
 
   answerButtonText: {
@@ -218,6 +297,7 @@ const styles = StyleSheet.create({
   },
   recommendationsContainer: {
     alignItems: 'center',
+    marginBottom: 20,
   },
   recommendationsHeader: {
     fontSize: 20,
@@ -271,6 +351,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  chartHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
