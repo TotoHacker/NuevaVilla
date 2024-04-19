@@ -42,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     
     <View style={styles.container}>
-      <Image source={require('./assets/logo.jpeg')} style ={styles.imagen} />
+      <Image source={require('./assets/logo.png')} style ={styles.imagen} />
       <TextInput
         placeholder="Nombre"
         value={name}
@@ -74,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#F0F4F7',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
