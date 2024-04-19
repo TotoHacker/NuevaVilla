@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native'; // Importa Alert para mostrar mensajes de error
 import axios from 'axios';
+import { Image } from 'react-native';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
 
   const handleRegister = async () => {
     // Validar campos antes de enviar la solicitud de registro
@@ -38,6 +40,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('./assets/logo.jpeg')} style ={styles.imagen} />
       <View style={styles.formContainer}>
         <TextInput
           placeholder="Nombre"
@@ -96,6 +99,13 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     fontSize: 16,
+  },
+  imagen:{
+    width: 120, // 5 cm en puntos
+  height: 120, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
   },
 });
 

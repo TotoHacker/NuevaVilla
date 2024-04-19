@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Button, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
+import { Image } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const { setUserId } = useContext(UserContext); // Obtiene la función para establecer el ID del usuario del contexto
@@ -41,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     
     <View style={styles.container}>
-
+      <Image source={require('./assets/logo.jpeg')} style ={styles.imagen} />
       <TextInput
         placeholder="Nombre"
         value={name}
@@ -99,6 +100,13 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
+  },
+  imagen:{
+    width: 120, // 5 cm en puntos
+  height: 120, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
   },
 });
 
