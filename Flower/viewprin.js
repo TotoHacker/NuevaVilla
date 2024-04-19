@@ -14,7 +14,7 @@ const MainView = ({ navigation }) => {
 
   const fetchMaxUV = async () => {
     try {
-      const response = await fetch(`http://192.168.0.8:8080/maxUv/${userId}`);
+      const response = await fetch(` http://192.168.0.9:8080/maxUv/${userId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -43,7 +43,7 @@ const MainView = ({ navigation }) => {
 
   const handleCheckRadiation = async () => {
     try {
-      const response = await fetch('http://192.168.0.14/sensor');
+      const response = await fetch(' http://192.168.0.9:8080/sensor');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

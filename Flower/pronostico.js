@@ -9,7 +9,7 @@ const ClimaPage = () => {
 
   const obtenerPronosticoClima = async () => {
     try {
-      const response = await axios.get(`http://192.168.0.8/pronostico-clima/${city}`);
+      const response = await axios.get(`http://192.168.0.9:8080/pronostico-clima/${city}`);
       setWeatherData(response.data);
     } catch (error) {
       setError('Error al obtener el pronóstico del clima');
