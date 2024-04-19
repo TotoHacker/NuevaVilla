@@ -55,7 +55,7 @@ const MainView = ({ navigation }) => {
 
   const fetchMaxUV = async () => {
     try {
-      const response = await fetch(`http://192.168.0.8:8080/maxUv/${userId}`);
+      const response = await fetch(` http://192.168.0.9:8080/maxUv/${userId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -83,7 +83,7 @@ const MainView = ({ navigation }) => {
 
   const handleCheckRadiation = async () => {
     try {
-      const response = await fetch('http://192.168.0.14/sensor');
+      const response = await fetch(' http://192.168.0.9:8080/sensor');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -168,15 +168,12 @@ const MainView = ({ navigation }) => {
   }; 
 
   const handleAnswerForm = () => {
-    navigation.navigate('Formulario');
+    navigation.navigate('crud');
   };
 
-  const handlepronostico = () => {
-    navigation.navigate('pronostico');
-  };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.contentContainer}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Flower Shield</Text>
@@ -239,9 +236,6 @@ const MainView = ({ navigation }) => {
           <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
             <Text style={styles.answerButtonText}>Contestar Formulario</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
-            <Text style={styles.answerButtonText}>Clima</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -252,6 +246,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    height: 'auto',
   },
   header: {
     flexDirection: 'row',
@@ -358,6 +353,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+  
 });
 
 export default MainView;

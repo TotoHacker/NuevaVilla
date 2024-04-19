@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Button, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { UserContext } from './UserContext'; // Importa el contexto de usuario
+import { Image } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const { setUserId } = useContext(UserContext); // Obtiene la función para establecer el ID del usuario del contexto
@@ -12,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.0.8:8080/login', {
+      const response = await axios.post('http://192.168.0.9:8080/login', {
         nombre: name,
         correo_electronico: email,
         contrasena: password,
@@ -41,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     
     <View style={styles.container}>
-
+      <Image source={require('./assets/logo.png')} style ={styles.imagen} />
       <TextInput
         placeholder="Nombre"
         value={name}
@@ -73,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#F0F4F7',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -99,6 +100,13 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
+  },
+  imagen:{
+    width: 120, // 5 cm en puntos
+  height: 120, // 5 cm en puntos
+  resizeMode: 'cover',
+  alignSelf: 'center',
+  marginTop: 6,
   },
 });
 
