@@ -130,15 +130,12 @@ const MainView = ({ navigation }) => {
   
 
   const handleAnswerForm = () => {
-    navigation.navigate('Formulario');
+    navigation.navigate('crud');
   };
 
-  const handlepronostico = () => {
-    navigation.navigate('pronostico');
-  };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.contentContainer}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Flower Shield</Text>
@@ -161,9 +158,6 @@ const MainView = ({ navigation }) => {
           <TouchableOpacity onPress={handleAnswerForm} style={styles.answerButton}>
             <Text style={styles.answerButtonText}>Contestar Formulario</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlepronostico} style={styles.answerButton}>
-            <Text style={styles.answerButtonText}>Clima</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -174,6 +168,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    height: 'auto',
   },
   header: {
     flexDirection: 'row',
@@ -272,6 +267,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  
 });
 
 export default MainView;
